@@ -1,3 +1,6 @@
+//定数
+float NE = 2.718282;
+
 //リストをindex単位で逆転させる
 list nnRevList( list src, integer index ){
     
@@ -155,21 +158,29 @@ float nnPow( float x, integer n ){
 
 
 //Exp関数(注意:結果の収束を待たずに結果を出力するため引数が大きくなると誤差が拡大します)
-//1以上の引数を渡すと誤差が目立つ3以上はひどい
+//整数部と小数部分を分けて計算することである程度誤差を収束させています
 float nnExp( float x ){
     
-    //増やすと精度が上がるがSLが死ぬ
+    //増やすと精度が上がるがSLの限界を超えて死ぬ
     integer LOOPCOUNT = 25;
     
-    integer i = 1;
     float expResult = 0.0;
     
+    //整数と少数を分離
+    integer e_a = (integer)llFloor(x);
+    float e_b = x - e_a;
+    
+    //整数部分を計算
+    expResult = nnPow(NE, e_a);
+    
+    //少数部分を計算
+    integer i = 1;    
     for( i ; i <= LOOPCOUNT ; i++){
         
-        expResult = expResult + nnPow(x, i) / nnFact(i);
+        expResult = expResult + nnPow(e_b, i) / nnFact(i);
     }
     
-    return expResult + 1;
+    return expResult;
 }
 
 
